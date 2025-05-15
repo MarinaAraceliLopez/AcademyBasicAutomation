@@ -21,13 +21,13 @@ Feature: Shop
       | Sort by popularity          |
       | Sort by average rating      |
 
-  #Scenario: The user clicks on the first sale product on the home page
-   # When the user clicks on the "first" "Sale" product on the home page
-   # Then the user can clearly view the actual price with the old price struck through
+  Scenario: The user clicks on the first sale product on the home page
+    When the user clicks on the "first" "Sale" product on the home page
+    Then the user can clearly view the actual price with the old price struck through
 
-  #Scenario: The user clicks on the second sale product on the home page
-   # When the user clicks on the "second" "Sale" product on the home page
-    #Then the user can clearly view the actual price with the old price struck through
+  Scenario: The user clicks on the second sale product on the home page
+    When the user clicks on the "second" "Sale" product on the home page
+    Then the user can clearly view the actual price with the old price struck through
 
 
 

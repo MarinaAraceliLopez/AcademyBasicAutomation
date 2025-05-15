@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ShopService {
 
@@ -69,17 +70,26 @@ public class ShopService {
     }
 
     public static void clickSaleProduct(String position) {
-        String locator = getSaleProductLocator(position);
-        WebElement product = WebActionManager.getElement(locator);
 
+        String productLocator = getSaleProductLocator(position);
         try {
+
+            WebElement product = WebActionManager.getElement(productLocator);
             JavascriptExecutor js = (JavascriptExecutor) DriverManager.getDriverInstance();
             js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", product);
-            product.click();
+            try {
+                product.click();
+            } catch (Exception e) {
+                System.out.println("Clic normal falló, intentando con JavaScript...");
+                js.executeScript("arguments[0].click();", product);
+            }
+        } catch (NoSuchElementException e) {
+            throw new AssertionError("No se encontró el producto en la posición: " + position);
         } catch (Exception e) {
-            throw new AssertionError("Error al hacer clic en el producto en oferta: " + e.getMessage());
+            throw new AssertionError("Error al intentar hacer clic en el producto: " + e.getMessage());
         }
     }
+
 
     private static String getSaleProductLocator(String position) {
         switch (position.toLowerCase()) {
