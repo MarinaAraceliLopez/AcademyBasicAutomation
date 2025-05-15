@@ -41,7 +41,7 @@ public class ShopService {
         js.executeScript("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", filterButton);
 
 
-        try { Thread.sleep(500); } catch (InterruptedException e) {}
+        {}
 
         filterButton.click();
     }
