@@ -1,3 +1,4 @@
+
 Feature: My Account
 
   Background:
@@ -7,17 +8,18 @@ Feature: My Account
     And the user enters "marinaracelilopez@gmail.com" in the "login email" field
     And the user enters "Marina_12_26" in the "login password" field
     And the user clicks on the "LOGIN" button
-    And the user should see "Welcome to your account dashboard"
+    And the user should see "Hello"
 
   Scenario Outline: Verify account functionalities after login for "<action>"
-    When the user clicks on the "<action>" button
+    When the user clicks on the "<action>" account button
+
     Then the user should see "<resultMessage>"
 
     Examples:
       | action             | resultMessage                                      |
       | Logout             | You have been logged out successfully              |
       | Account Details    | Here you can edit your account and change password |
-      | Address            | Your billing and shipping addresses are shown      |
+      | Address            |  The following addresses will be used on the checkout page by default      |
       | Orders             | User must view their orders on clicking orders link|
 
   Scenario: Edit on Shipping Address
