@@ -1,4 +1,4 @@
-
+@Login @Regression
 Feature: Login
 
   Background:
@@ -6,6 +6,7 @@ Feature: Login
     And the user navigates to the URL "http://practice.automationtesting.in/"
     And the user clicks on the "My Account" menu
 
+  @Smoke
   Scenario: Successful user login
     When the user enters "marinaracelilopez@gmail.com" in the "login email" field
     And the user enters "Marina_12_26" in the "login password" field

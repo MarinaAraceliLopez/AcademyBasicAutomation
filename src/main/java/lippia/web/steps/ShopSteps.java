@@ -9,12 +9,16 @@ public class ShopSteps extends PageSteps {
 
     @When("the user adjusts the price filter between {int} and {int} rupees")
     public void adjustPriceFilter(int min, int max) {
-        ShopService.setPriceRange(min, max);
-    }
+        int priceMin = 150;
+        int priceMax = 500;
 
-    @Then("the visible products are within the price range")
-    public void verifyProductsInRange(int min, int max) {
-        ShopService.verifyPricesInRange(min, max);
+        ShopService.setPriceRangeByValues(min, max, priceMin, priceMax);
+        ShopService.clickFilterButton();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @When("the user clicks on the Filter button")
@@ -23,9 +27,10 @@ public class ShopSteps extends PageSteps {
     }
 
     @Then("the user should see only books priced between {int} and {int} rupees")
-    public void theUserShouldSeeOnlyBooksPricedBetweenAndRupees(int min, int max) {
+    public void verifyBooksPrices(int min, int max) {
         ShopService.verifyPricesInRange(min, max);
     }
+
 
     @When("the user selects {string} from the sorting dropdown")
     public void theUserSelectsFromTheSortingDropdown(String option) {

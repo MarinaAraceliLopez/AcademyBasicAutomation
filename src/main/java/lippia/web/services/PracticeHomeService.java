@@ -1,7 +1,7 @@
 package lippia.web.services;
 
 import com.crowdar.core.PropertyManager;
-import lippia.web.constants.PracticeHomeConstants;
+import lippia.web.constants.HomePageConstants;
 import org.testng.Assert;
 
 import static com.crowdar.core.actions.ActionManager.click;
@@ -15,10 +15,10 @@ public class PracticeHomeService {
     }
 
     public static void clickShopButton() {
-        click(PracticeHomeConstants.BUTTON_SHOP_XPATH);
+        click(HomePageConstants.BUTTON_SHOP_XPATH);
     }
 
     public static void verificarShopPage() {
-        Assert.assertTrue(isPresent(PracticeHomeConstants.ORDERBY_XPATH));
+        Assert.assertTrue(isPresent(HomePageConstants.ORDERBY_XPATH));
     }
 }

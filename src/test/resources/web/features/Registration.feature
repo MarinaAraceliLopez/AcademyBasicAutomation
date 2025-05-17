@@ -1,4 +1,4 @@
-
+@Registration @Regression
 Feature: User registration on the website
 
   Background:
