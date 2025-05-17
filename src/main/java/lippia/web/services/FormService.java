@@ -24,6 +24,13 @@ public class FormService {
             case "login":
                 LoginService.clickLoginButton();
                 break;
+            case "logout":
+            case "account details":
+            case "addresses":
+            case "orders":
+            case "edit shipping":
+                MyAccountService.clickOnAccountButton(button);
+                break;
             default:
                 throw new IllegalArgumentException("Botón no soportado: " + button);
         }

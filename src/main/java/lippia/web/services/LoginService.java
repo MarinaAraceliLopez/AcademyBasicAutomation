@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 
 public class LoginService {
 
-    // Rellenar los campos de login (email y password)
+
     public static void fillLoginField(String field, String value) {
         switch (field) {
             case "login email":
