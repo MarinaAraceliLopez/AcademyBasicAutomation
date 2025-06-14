@@ -22,4 +22,3 @@ public class CommonSteps extends PageSteps {
         CommonService.clickOnMenu(menuName);
     }
 }
-

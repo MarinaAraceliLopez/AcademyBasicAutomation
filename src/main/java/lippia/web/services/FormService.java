@@ -56,4 +56,6 @@ public class FormService {
         Assert.assertTrue(onLoginPage || onRegistrationPage,
                 "El usuario no se mantuvo en la misma página (ni login ni registro).");
     }
+
+
 }
