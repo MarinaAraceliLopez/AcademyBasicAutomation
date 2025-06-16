@@ -1,4 +1,4 @@
-  @Registration @Regression
+   @Regression
   Feature: User registration on the website
 
   Background:
@@ -6,12 +6,13 @@
     And the user navigates to the URL "http://practice.automationtesting.in/"
     And the user clicks on the "My Account" menu
 
-
+    @Registration
     Scenario: User registration successful
-      When the user enters "testeando1234@gmail.com" in the "registration email" field
-      And the user enters "testeando1234" in the "registration password" field
+      When the user enters "testeando12345@gmail.com" in the "registration email" field
+      And the user enters "testeando12345" in the "registration password" field
       And the user clicks on the "register" button
       Then the user should see a registration confirmation or welcome message
+
 
     @TpFinal
   Scenario Outline: Invalid registration with incorrect combinations
