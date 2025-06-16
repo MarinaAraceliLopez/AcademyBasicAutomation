@@ -16,4 +16,5 @@ public class ShopConstants {
 
     public static final By OLD_PRICE = By.xpath("//p/del/span");
     public static final By NEW_PRICE = By.xpath("//p/ins/span");
+    public static final String TAX_LABEL = "xpath://*[contains(text(),'Tax')]";
 }

@@ -162,5 +162,187 @@ public class ShopService {
         System.out.println("Precio nuevo: " + newPrice.getText());
     }
 
+
+    public static void clickAddToBasketButton(String buttonText) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement button = driver.findElement(By.xpath("//a[contains(text(),'" + buttonText + "') or contains(@class,'add_to_cart_button')]"));
+        button.click();
+    }
+
+    public static void verifyBookInBasketWithPrice() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement basketMenu = driver.findElement(By.cssSelector(".cartcontents"));
+        if (!basketMenu.isDisplayed()) {
+            throw new AssertionError("El libro no está visible en el menú del carrito.");
+        }
+        String text = basketMenu.getText();
+        if (!text.matches(".*\\d+\\.\\d{2}.*")) {
+            throw new AssertionError("No se muestra precio junto al libro en el carrito.");
+        }
+    }
+
+    public static void clickBasketMenuLink() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement basketLink = driver.findElement(By.cssSelector(".wpmenucart-contents"));
+        basketLink.click();
+    }
+
+    public static void verifyOnCheckoutPage() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        if (!driver.getCurrentUrl().contains("checkout")) {
+            throw new AssertionError("No se encuentra en la página de checkout.");
+        }
+    }
+
+    public static void verifyTotalAndSubtotalVisible(String buttonText) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement subtotal = driver.findElement(By.cssSelector(".cart-subtotal .amount"));
+        WebElement total = driver.findElement(By.cssSelector(".order-total .amount"));
+        WebElement proceedButton = driver.findElement(By.xpath("//button[contains(text(),'" + buttonText + "')]"));
+
+        if (!subtotal.isDisplayed() || !total.isDisplayed() || !proceedButton.isDisplayed()) {
+            throw new AssertionError("Subtotal, total o botón '" + buttonText + "' no están visibles.");
+        }
+    }
+
+    public static void verifyTotalLessThanSubtotal() {
+        WebDriver driver = DriverManager.getDriverInstance();
+
+        String subtotalText = driver.findElement(By.cssSelector(".cart-subtotal .amount")).getText().replaceAll("[^\\d.]", "");
+        String totalText = driver.findElement(By.cssSelector(".order-total .amount")).getText().replaceAll("[^\\d.]", "");
+
+        double subtotal = Double.parseDouble(subtotalText);
+        double total = Double.parseDouble(totalText);
+
+        if (!(total < subtotal)) {
+            throw new AssertionError("El total (" + total + ") NO es menor que el subtotal (" + subtotal + ").");
+        }
+    }
+
+    public static void clickButtonByText(String buttonText) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement button = driver.findElement(By.xpath("//button[contains(text(),'" + buttonText + "')]"));
+        button.click();
+    }
+
+    public static void verifyOnPaymentGatewayPage() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        String url = driver.getCurrentUrl();
+        if (!url.contains("checkout")) {
+            throw new AssertionError("No está en la página de pasarela de pago.");
+        }
+    }
+
+    public static void verifyDetailsSectionsVisible() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        String[] selectors = {
+                "#billing_address", // Billing Details
+                ".woocommerce-checkout-review-order-table", // Order Details
+                "#order_comments", // Additional details
+                "#payment" // Payment gateway
+        };
+        for (String selector : selectors) {
+            WebElement elem = driver.findElement(By.cssSelector(selector));
+            if (!elem.isDisplayed()) {
+                throw new AssertionError("El detalle '" + selector + "' no está visible.");
+            }
+        }
+    }
+
+    public static void fillBillingDetailsForm() {
+        WebDriver driver = DriverManager.getDriverInstance();
+
+        driver.findElement(By.id("billing_first_name")).sendKeys("Juan");
+        driver.findElement(By.id("billing_last_name")).sendKeys("Pérez");
+        driver.findElement(By.id("billing_email")).sendKeys("juan.perez@example.com");
+        driver.findElement(By.id("billing_phone")).sendKeys("1234567890");
+        driver.findElement(By.id("billing_address_1")).sendKeys("Calle Falsa 123");
+        driver.findElement(By.id("billing_city")).sendKeys("Ciudad");
+        driver.findElement(By.id("billing_postcode")).sendKeys("12345");
+
+        // Selección país, por ejemplo India
+        Select countrySelect = new Select(driver.findElement(By.id("billing_country")));
+        countrySelect.selectByVisibleText("India");
+    }
+
+    public static void selectPaymentMethod(String paymentMethod) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        String paymentId;
+
+        switch (paymentMethod.toLowerCase()) {
+            case "direct bank transfer":
+                paymentId = "payment_method_bacs";
+                break;
+            case "cheque":
+                paymentId = "payment_method_cheque";
+                break;
+            case "cash":
+                paymentId = "payment_method_cod";
+                break;
+            case "paypal":
+                paymentId = "payment_method_paypal";
+                break;
+            default:
+                throw new IllegalArgumentException("Método de pago no soportado: " + paymentMethod);
+        }
+        WebElement radioBtn = driver.findElement(By.id(paymentId));
+        if (!radioBtn.isSelected()) {
+            radioBtn.click();
+        }
+    }
+
+    public static void clickPlaceOrderButton() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebElement placeOrderBtn = driver.findElement(By.id("place_order"));
+        placeOrderBtn.click();
+    }
+
+    public static void verifyOnOrderConfirmationPage() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        if (!driver.getCurrentUrl().contains("order-received")) {
+            throw new AssertionError("No está en la página de confirmación de orden.");
+        }
+    }
+
+    public static void verifyOrderDetailsSections() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        String[] selectors = {
+                ".woocommerce-order-overview", // Order details
+                ".woocommerce-bank-details", // Bank details
+                ".woocommerce-customer-details", // Customer details
+                "#billing_address" // Billing details
+        };
+        for (String selector : selectors) {
+            WebElement elem = driver.findElement(By.cssSelector(selector));
+            if (!elem.isDisplayed()) {
+                throw new AssertionError("El detalle '" + selector + "' no está visible en la página de confirmación.");
+            }
+        }
+    }
+
+    public static void verifyTaxRateForLocation(int expectedTaxRate, String location) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        // Aquí se debe obtener el valor de impuesto mostrado en checkout y validar la tasa
+
+        WebElement taxElement = driver.findElement(By.cssSelector(".tax-rate .amount, .tax-rate"));
+
+        String taxText = taxElement.getText().replaceAll("[^\\d]", "");
+
+        int taxRateDisplayed;
+        try {
+            taxRateDisplayed = Integer.parseInt(taxText);
+        } catch (NumberFormatException e) {
+            throw new AssertionError("No se pudo parsear el impuesto mostrado: " + taxText);
+        }
+
+        if (taxRateDisplayed != expectedTaxRate) {
+            throw new AssertionError("La tasa de impuesto para " + location + " es " + taxRateDisplayed + "% pero se esperaba " + expectedTaxRate + "%");
+        }
+    }
+
+    public static String getTaxText() {
+        // Aquí defines el locator del texto donde aparece el impuesto en checkout
+        return WebActionManager.getText(ShopConstants.TAX_LABEL);
+    }
 }
 

@@ -13,6 +13,7 @@
       And the user clicks on the "register" button
       Then the user should see a registration confirmation or welcome message
 
+    @TpFinal
   Scenario Outline: Invalid registration with incorrect combinations
     When the user enters "<email>" in the "registration email" field
     And the user enters "<password>" in the "registration password" field
@@ -21,10 +22,10 @@
     And a message saying "<message>" should be displayed
 
     Examples:
-      | email                      | password      | message                                                                 |
-      | assdg-@gmail               | testeando1234 | Please provide a valid email address.                                   |
-      |                            | testeando1234 | Please provide a valid email address.                                   |
-      |                            |               | Please provide a valid email address.                                   |
-      | testeando1234@gmail.com    |               | An account is already registered with your email address. Please login. |
+      | email                      | password      | message                                                                        |
+      | assdg-@gmail               | testeando1234 | Please provide a valid email address.                                          |
+      |                            | testeando1234 | Please provide a valid email address.                                          |
+      |                            |               | Please provide a valid email address.                                          |
+      | testeando1234@gmail.com    |               | Error: An account is already registered with your email address. Please login. |
 
 

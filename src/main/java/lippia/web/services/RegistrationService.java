@@ -41,7 +41,7 @@ public class RegistrationService {
 
     public static String getErrorMessage() {
         WebElement messageElement = DriverManager.getDriverInstance()
-                .findElement(By.xpath(RegistrationConstants.ERROR_MESSAGE));
+                .findElement(byFromString(RegistrationConstants.ERROR_MESSAGE));
         return messageElement.getText();
     }
 
@@ -49,4 +49,17 @@ public class RegistrationService {
         return WebActionManager.isPresent(RegistrationConstants.ERROR_MESSAGE);
     }
 
+    private static By byFromString(String locator) {
+        if (locator.startsWith("xpath:")) {
+            return By.xpath(locator.replace("xpath:", ""));
+        } else if (locator.startsWith("css:")) {
+            return By.cssSelector(locator.replace("css:", ""));
+        } else if (locator.startsWith("id:")) {
+            return By.id(locator.replace("id:", ""));
+        } else if (locator.startsWith("name:")) {
+            return By.name(locator.replace("name:", ""));
+        } else {
+            return By.xpath(locator);
+        }
+    }
 }

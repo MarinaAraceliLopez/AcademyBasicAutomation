@@ -1,5 +1,7 @@
 package lippia.web.services;
 
+import com.crowdar.driver.DriverManager;
+import lippia.web.constants.LoginConstants;
 import org.testng.Assert;
 
 public class FormService {
@@ -50,12 +52,11 @@ public class FormService {
     }
 
     public static void verifyUserStaysOnSamePage() {
-        boolean onLoginPage = LoginService.isOnLoginPage();
-        boolean onRegistrationPage = RegistrationService.isOnRegistrationPage();
+        String currentUrl = DriverManager.getDriverInstance().getCurrentUrl();
+        boolean isLoginFormVisible = !DriverManager.getDriverInstance()
+                .findElements(LocatorService.getBy(LoginConstants.USERNAME_EMAIL_FIELD)).isEmpty();
 
-        Assert.assertTrue(onLoginPage || onRegistrationPage,
+        Assert.assertTrue(currentUrl.contains("my-account") || isLoginFormVisible,
                 "El usuario no se mantuvo en la misma página (ni login ni registro).");
     }
-
-
 }

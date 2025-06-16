@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
@@ -6,29 +5,24 @@
 		<artifactId>root</artifactId>
 		<version>3.3.0.2</version>
 	</parent>
-
 	<groupId>Lippia-Web-Example-Project</groupId>
 	<artifactId>LippiaWebExampleProject</artifactId>
 	<version>1.0.0</version>
 	<name>crowdar_automation_web</name>
-
 	<packaging>jar</packaging>
-
 	<properties>
 		<maven.build.timestamp.format>yyyyMMdd_HHmm</maven.build.timestamp.format>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-		<!-- defult configuration chrome local -->
-		<crowdar.projectType></crowdar.projectType>
-		<crowdar.driver.capabilities.json_path></crowdar.driver.capabilities.json_path>
-		<crowdar.setupStrategy></crowdar.setupStrategy>
-		<crowdar.driverHub></crowdar.driverHub>
-		<runner></runner>
-
-		<!-- cucumber options -->
+		<!--  defult configuration chrome local  -->
+		<crowdar.projectType/>
+		<crowdar.driver.capabilities.json_path/>
+		<crowdar.setupStrategy/>
+		<crowdar.driverHub/>
+		<runner/>
+		<!--  cucumber options  -->
 		<cucumber.stepsDefinitions>--glue / </cucumber.stepsDefinitions>
-		<cucumber.hooks>--glue	lippia/web/hooks</cucumber.hooks>
-		<cucumber.tags>@Regression</cucumber.tags>
+		<cucumber.hooks>--glue lippia/web/hooks</cucumber.hooks>
+		<cucumber.tags>@Login</cucumber.tags>
 		<pretty.plugin>--plugin pretty</pretty.plugin>
 		<crowdar.cucumber.plugins>--plugin pretty --plugin com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter: --plugin com.crowdar.examples.listeners.CucumberListener:</crowdar.cucumber.plugins>
 		<crowdar.extent.host.name>LocalMachine</crowdar.extent.host.name>
@@ -37,17 +31,13 @@
 		<cucumber.report>--plugin lippia.web.reporters.CucumberReporter:</cucumber.report>
 		<test-manager.report>--plugin lippia.web.reporters.TestManagerReporter:</test-manager.report>
 		<crowdar.cucumber.option>src/test/resources/web/features ${cucumber.hooks} ${cucumber.stepsDefinitions} --tags 'not @Ignore' --tags ${cucumber.tags} ${cucumber.report}</crowdar.cucumber.option>
-
-		<!-- client project custom properties -->
+		<!--  client project custom properties  -->
 		<web-app.url>https://practice.automationtesting.in/</web-app.url>
-
 	</properties>
 	<profiles>
-
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-		<!--    Profiles related to Browser requirementes    -->
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
+		<!--     Profiles related to Browser requirementes     -->
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
 		<profile>
 			<id>chrome</id>
 			<activation>
@@ -58,7 +48,6 @@
 				<crowdar.driver.capabilities.json_path>src/main/resources/browsers/chromeCapabilities.json</crowdar.driver.capabilities.json_path>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>firefox</id>
 			<properties>
@@ -66,7 +55,6 @@
 				<crowdar.driver.capabilities.json_path>src/main/resources/browsers/firefoxCapabilities.json</crowdar.driver.capabilities.json_path>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>chromeHeadless</id>
 			<properties>
@@ -74,11 +62,9 @@
 				<crowdar.driver.capabilities.json_path>src/main/resources/browsers/chromeCapabilitiesGrid.json</crowdar.driver.capabilities.json_path>
 			</properties>
 		</profile>
-
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-		<!--   Profiles related to Driver Instance petition   -->
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
+		<!--    Profiles related to Driver Instance petition    -->
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
 		<profile>
 			<id>local</id>
 			<activation>
@@ -88,20 +74,17 @@
 				<crowdar.setupStrategy>web.DownloadLatestStrategy</crowdar.setupStrategy>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>stack_local</id>
 			<properties>
 				<crowdar.setupStrategy>web.SeleniumGridStrategy</crowdar.setupStrategy>
-				<!-- you can set your seleniumGrid url -->
+				<!--  you can set your seleniumGrid url  -->
 				<crowdar.driverHub>http://localhost:4444/wd/hub</crowdar.driverHub>
 			</properties>
 		</profile>
-
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-		<!--   Profiles related to Runners ejecutions         -->
-		<!-- @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ -->
-
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
+		<!--    Profiles related to Runners ejecutions          -->
+		<!--  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  -->
 		<profile>
 			<id>secuencial</id>
 			<activation>
@@ -111,7 +94,6 @@
 				<runner>testngSecuencial.xml</runner>
 			</properties>
 		</profile>
-
 		<profile>
 			<id>parallel</id>
 			<properties>
@@ -135,7 +117,7 @@
 			<artifactId>extentreports-cucumber4-adapter</artifactId>
 			<version>1.1.0.10</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.github.luben/zstd-jni -->
+		<!--  https://mvnrepository.com/artifact/com.github.luben/zstd-jni  -->
 	</dependencies>
 	<build>
 		<filters>
@@ -152,24 +134,21 @@
 						<suiteXmlFile>${runner}</suiteXmlFile>
 					</suiteXmlFiles>
 					<systemPropertyVariables>
-						<TEST_MANAGER_API_HOST></TEST_MANAGER_API_HOST>
-						<TEST_MANAGER_API_PORT></TEST_MANAGER_API_PORT>
-						<TEST_MANAGER_RUN_NAME></TEST_MANAGER_RUN_NAME>
-						<TEST_MANAGER_PROJECT_CODE></TEST_MANAGER_PROJECT_CODE>
-						<TEST_MANAGER_USERNAME></TEST_MANAGER_USERNAME>
-						<TEST_MANAGER_PASSWORD></TEST_MANAGER_PASSWORD>
-
+						<TEST_MANAGER_API_HOST/>
+						<TEST_MANAGER_API_PORT/>
+						<TEST_MANAGER_RUN_NAME/>
+						<TEST_MANAGER_PROJECT_CODE/>
+						<TEST_MANAGER_USERNAME/>
+						<TEST_MANAGER_PASSWORD/>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-
 	<repositories>
 		<repository>
 			<id>central</id>
 			<url>https://repo.maven.apache.org/maven2</url>
 		</repository>
 	</repositories>
-
 </project>
