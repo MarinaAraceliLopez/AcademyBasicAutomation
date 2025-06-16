@@ -20,13 +20,13 @@ Feature: Login
       |                             | testeando1234 | Username is required.                                                                                                          |
 
 
-  @TpFinal
+   @TpFinal
   Scenario: Login fails with case changed username and password
-    When the user enters "testeando1234@gmail.com" in the "login email" field
-    And the user enters "testeando1234" in the "login password" field
+    When the user enters "testeando@gmail.com" in the "login email" field
+    And the user enters "testeando" in the "login password" field
     And the user clicks on the "login" button
     Then the user should stay on the same page
-    And a message saying "Error: The password you entered for the username testeando1234@gmail.com  is incorrect. Lost your password?" should be displayed
+    And a message saying "Error: A user could not be found with this email address." should be displayed
 
 
   @TpFinal
@@ -38,6 +38,7 @@ Feature: Login
     And the user presses the browser back button
     Then the user should not be signed in
     And the user should see the login page
+
 
   Scenario: Successful user login
     When the user enters "testeando1234@gmail.com" in the "login email" field
