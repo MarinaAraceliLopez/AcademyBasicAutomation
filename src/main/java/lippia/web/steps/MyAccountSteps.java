@@ -1,117 +1,133 @@
 package lippia.web.steps;
 
-import com.crowdar.core.actions.WebActionManager;
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
-import lippia.web.constants.MyAccountConstants;
+import io.cucumber.java.en.*;
+import lippia.web.services.FormService;
 import lippia.web.services.MyAccountService;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
-import java.time.Duration;
+import static org.testng.Assert.assertTrue;
 
 public class MyAccountSteps {
 
-    @Then("the user should see {string}")
-    public void theUserShouldSee(String expectedMessage) {
-        MyAccountService.verifyWelcomeMessage(expectedMessage);
+    @When("the user clicks on the {string} button in account")
+    public void theUserClicksOnTheButtonInAccount(String button) {
+        MyAccountService.clickMyAccountOption(button);
     }
 
-    @Then("the user should see the text {string}")
-    public void theUserShouldSeeText(String expectedText) {
-        MyAccountService.validateTextIsPresent(expectedText);
-    }
-
-    @Then("the user should be logged out successfully")
-    public void theUserShouldBeLoggedOutSuccessfully() {
-        MyAccountService.verifyLogout();
+    @And("the user clicks on the {string} button for the {string}")
+    public void theUserClicksEditFor(String button, String context) {
+        if (context.equalsIgnoreCase("Shipping Address") && button.equalsIgnoreCase("Edit")) {
+            MyAccountService.clickEditShippingAddress();
+        } else {
+            Assert.fail("Unknown button " + button + " for context " + context);
+        }
     }
 
     @Then("the user should see the {string} section visible")
     public void theUserShouldSeeTheSectionVisible(String action) {
-        MyAccountService.validateSectionIsVisible(action);
-    }
-
-    @When("the user clicks on the {string} button for the {string}")
-    public void theUserClicksOnTheEditButtonFor(String button, String section) {
-        if (button.equalsIgnoreCase("Edit") && section.equalsIgnoreCase("Shipping Address")) {
-            MyAccountService.clickOnAccountButton("addresses");
-            MyAccountService.clickOnAccountButton("edit shipping");
-        }
+        boolean isVisible = MyAccountService.isSectionVisible(action);
+        assertTrue(isVisible, "The " + action + " section is NOT visible.");
     }
 
     @Then("the shipping address form should be visible")
-    public void theShippingAddressFormShouldBeVisible() {
-        MyAccountService.validateShippingFormIsVisible();
-    }
-
-    @And("the user has at least one order in their account")
-    public void theUserHasAtLeastOneOrderInTheirAccount() {
-        MyAccountService.validateOrderHistoryIsPresent();
-    }
-
-    @Then("the user should see the order detail")
-    public void theUserShouldSeeTheOrderDetail() {
-        MyAccountService.validateOrderDetailIsVisible();
+    public void theShippingAddressFormShouldBeVisible(){
+        assertTrue(MyAccountService.isShippingFormVisible(), "Shipping form not visible.");
     }
 
     @And("the user clicks on the {string} button of an order")
-    public void theUserClicksOnTheButtonOfAnOrder(String button) {
-        if (button.equalsIgnoreCase("view")) {
-            MyAccountService.clickViewOrderButton();
+    public void theUserClicksViewOfAnOrder(String button) {
+        if (button.equalsIgnoreCase("View")) {
+            MyAccountService.viewOrderDetails();
         } else {
-            throw new IllegalArgumentException("Botón '" + button + "' no reconocido en el contexto de orden.");
+            Assert.fail("Unknown button " + button);
         }
     }
 
-    @When("the user edits their password")
-    public void theUserEditsTheirPassword() {
-        String currentPassword = "Marina_12_26";
-        String newPassword = "NewPassword123!";
-        String confirmPassword = "NewPassword123!";
-        MyAccountService.editPassword(currentPassword, newPassword, confirmPassword);
+
+    @And("the user clicks on the Logout button")
+    public void theUserClicksLogout(){
+        MyAccountService.performLogout();
     }
 
-    @Then("the user should see a confirmation message")
-    public void theUserShouldSeeAConfirmationMessage() {
-        String expectedMessage = "Account details changed successfully.";
-        MyAccountService.validatePasswordChangeConfirmation(expectedMessage);
+    @Then("the user should be logged out successfully")
+    public void theUserShouldBeLoggedOut(){
+        assertTrue(MyAccountService.isLoggedOut(), "The user is not logged out.");
     }
 
-    @Then("the user should see the account details section")
-    public void theUserShouldSeeTheAccountDetailsSection() {
-        MyAccountService.validateAccountDetailsForm();
+    @And("the user should see {string}")
+    public void theUserShouldSeeTextOnPage(String text) {
+        boolean isVisible = MyAccountService.isWordPresentOnPage(text);
+        assertTrue(isVisible, "Text " + text + " not visible on page.");
     }
-    @Then("the user should be able to change the password")
-    public void theUserShouldBeAbleToChangeThePassword() {
-        boolean canChange = MyAccountService.canChangePassword();
-        if (!canChange) {
-            throw new AssertionError("Password change fields are not visible");
+
+    @Given("the user has at least one order in their account")
+    public void theUserHasAtLeastOneOrderInAccount() {
+        assertTrue(MyAccountService.hasAnyOrder(), "No orders were found in the account.");
+    }
+
+    @Then("the user should see the order detail")
+    public void theUserShouldSeeTheOrderDetails(){
+        assertTrue(MyAccountService.isOrderDetailsVisible(), "The order details are NOT visible.");
+    }
+
+    @Then("the user should have products in the cart")
+    public void theUserHasProductsInCart(){
+        assertTrue(MyAccountService.hasAnyProductInCart(),
+                "The cart is empty.");
+    }
+
+    @Then("the user should view order details")
+    public void viewOrderDetailsStep(){
+        if (MyAccountService.hasAnyOrder()) {
+            MyAccountService.viewOrderDetails();
+            assertTrue(MyAccountService.isOrderDetailsVisible(),
+                    "Order details were not displayed.");
+        } else {
+            Assert.fail("No orders were found in the account.");
         }
-        WebActionManager.setInput(MyAccountConstants.FIRST_NAME_FIELD, "Marina");
-        WebActionManager.setInput(MyAccountConstants.LAST_NAME_FIELD, "Lopez");
-
-        WebActionManager.setInput(MyAccountConstants.CURRENT_PASSWORD_FIELD, "Marina_12_26");
-        WebActionManager.setInput(MyAccountConstants.NEW_PASSWORD_FIELD, "NuevaPassword123!");
-        WebActionManager.setInput(MyAccountConstants.CONFIRM_PASSWORD_FIELD, "NuevaPassword123!");
-
-
-        // Esperar a que el botón esté visible antes de hacer click
-
-        WebActionManager.click(MyAccountConstants.SAVE_CHANGES_BUTTON);
     }
+
+
+    @When("the user clicks on the \"Edit\" button for the \"Shipping Address\"")
+    public void theUserEditsShippingAddress(){
+        MyAccountService.clickEditShippingAddress();
+    }
+
+    @Then("the cart should already have products")
+    public void theCartShouldHaveProducts(){
+        assertTrue(MyAccountService.hasProductInCart(), "El carrito está vacío.");
+    }
+
     @And("the user changes password from {string} to {string}")
-    public void theUserChangesPasswordFromTo(String oldPassword, String newPassword) {
-        MyAccountService.editPassword(oldPassword, newPassword, newPassword);
+    public void theUserChangesPasswordFromTo(String currentPass, String newPass) {
+        MyAccountService.changePassword(currentPass, newPass);
     }
-
 
     @Then("the password should be successfully updated")
-    public void thePasswordShouldBeSuccessfullyUpdated() {
-        MyAccountService.validatePasswordChangeConfirmation("Account details changed successfully.");
+    public void passwordShouldBeSuccessfullyUpdated(){
+        assertTrue(MyAccountService.isChangeSuccessMessageVisible(), "El password NO se actualizó.");
     }
+
+    @And("the user enters first name {string}, last name {string} and email {string}")
+    public void theUserEntersAccountDetails(String firstName, String lastName, String email) {
+        MyAccountService.fillAccountDetails(firstName, lastName, email);
+    }
+
+    @And("the user enters current password {string} and new password {string}")
+    public void theUserEntersPasswords(String currentPass, String newPass) {
+        MyAccountService.fillPasswords(currentPass, newPass);
+    }
+
+    @And("the user saves the account details")
+    public void theUserSavesAccountDetails() {
+        MyAccountService.saveAccountDetails();
+    }
+
+    @Then("the account details should be successfully updated")
+    public void accountDetailsShouldBeUpdated() {
+        assertTrue(MyAccountService.isChangeSuccessMessageVisible(), "Los datos NO se actualizaron.");
+    }
+
 
 
 }

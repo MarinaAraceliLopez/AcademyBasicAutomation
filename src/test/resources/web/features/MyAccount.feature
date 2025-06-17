@@ -9,7 +9,7 @@ Feature: My Account
     And the user enters "testeando1234@gmail.com" in the "login email" field
     And the user enters "testeando1234" in the "login password" field
     And the user clicks on the "login" button
-    Then the user should see "Hello"
+    And the user should see "Hello"
 
 
 
@@ -23,16 +23,20 @@ Feature: My Account
       | Addresses       |
       | Orders          |
 
+
   Scenario: Edit Shipping Address
     When the user clicks on the "Addresses" button
     And the user clicks on the "Edit" button for the "Shipping Address"
     Then the shipping address form should be visible
+
 
   Scenario: View Order Details
     Given the user has at least one order in their account
     When the user clicks on the "Orders" button
     And the user clicks on the "View" button of an order
     Then the user should see the order detail
+
+
 
   @TpFinal
   Scenario: Logout Flow
