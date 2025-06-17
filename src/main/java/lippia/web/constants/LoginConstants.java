@@ -6,7 +6,7 @@ public class LoginConstants {
 
         public static final String LOGIN_PASSWORD_FIELD = "xpath://input[@id='password']";
 
-        public static final String LOGIN_BUTTON = "xpath://*[@id='customer_login']//form//input[@type='submit' and @value='Login']";
+        public static final String LOGIN_BUTTON = "css:input[name='login']";
 
 
         public static final String ERROR_MESSAGE = "xpath://ul[contains(@class,'woocommerce-error')]/li";

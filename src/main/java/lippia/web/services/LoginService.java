@@ -36,9 +36,11 @@ public class LoginService {
 
     public static void clickLoginButton() {
         DriverManager.getDriverInstance()
-                .findElement(LocatorService.getBy(LoginConstants.LOGIN_BUTTON))
+                .findElement(byFromString(LoginConstants.LOGIN_BUTTON))
                 .click();
     }
+
+
 
     public static boolean isLoginFailed() {
         return isElementPresent(byFromString(LoginConstants.ERROR_MESSAGE));
@@ -78,4 +80,5 @@ public class LoginService {
         WebDriver driver = DriverManager.getDriverInstance();
         return driver.getPageSource().contains(word);
     }
+
 }
