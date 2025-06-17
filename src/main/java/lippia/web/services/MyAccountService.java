@@ -58,9 +58,11 @@ public class MyAccountService {
     public static boolean isShippingFormVisible(){
         return isElementVisible(MyAccountConstants.SHIPPING_ADDRESS_FORM);
     }
+
     public static void viewOrderDetails(){
         WebActionManager.click(MyAccountConstants.ORDER_VIEW_BUTTON);
     }
+
     public static boolean isOrderDetailsVisible(){
         return isElementVisible(MyAccountConstants.ORDER_DETAIL);
     }
@@ -70,9 +72,9 @@ public class MyAccountService {
     public static boolean isLoggedOut(){
         return isElementPresent(byFromString("xpath://input[@id='username']"));
     }
-    public static boolean hasAnyOrder(){
-        return isElementPresent(byFromString(MyAccountConstants.FIRST_ORDER_IN_TABLE));
-    }
+//    public static boolean hasAnyOrder(){
+//        return isElementPresent(byFromString(MyAccountConstants.FIRST_ORDER_IN_TABLE));
+//    }
     public static boolean isWordPresentOnPage(String text) {
         return !DriverManager.getDriverInstance()
                 .findElements(By.xpath("//*[contains(text(),'" + text + "')]")).isEmpty();
@@ -131,6 +133,14 @@ public class MyAccountService {
         WebDriver driver = DriverManager.getDriverInstance();
         driver.findElement(byFromString("xpath://button[@name='save_account_details']")).click();
     }
+    public static boolean hasAnyOrder(){
+        // Primero ir a Orders
+        clickMyAccountOption("Orders");
+
+        // Después verificar que aparece la primera orden en la tabla
+        return isElementPresent(byFromString(MyAccountConstants.FIRST_ORDER_IN_TABLE));
+    }
+
 
 
 

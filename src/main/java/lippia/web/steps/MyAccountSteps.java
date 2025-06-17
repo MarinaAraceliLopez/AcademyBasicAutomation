@@ -34,15 +34,10 @@ public class MyAccountSteps {
         assertTrue(MyAccountService.isShippingFormVisible(), "Shipping form not visible.");
     }
 
-    @And("the user clicks on the {string} button of an order")
-    public void theUserClicksViewOfAnOrder(String button) {
-        if (button.equalsIgnoreCase("View")) {
-            MyAccountService.viewOrderDetails();
-        } else {
-            Assert.fail("Unknown button " + button);
-        }
+    @And("the user clicks on the \"View\" button of an order")
+    public void theUserClicksViewOfAnOrder() {
+        MyAccountService.viewOrderDetails();
     }
-
 
     @And("the user clicks on the Logout button")
     public void theUserClicksLogout(){
@@ -72,26 +67,32 @@ public class MyAccountSteps {
 
     @Then("the user should have products in the cart")
     public void theUserHasProductsInCart(){
-        assertTrue(MyAccountService.hasAnyProductInCart(),
-                "The cart is empty.");
+        assertTrue(MyAccountService.hasAnyProductInCart(), "The cart is empty.");
     }
 
     @Then("the user should view order details")
     public void viewOrderDetailsStep(){
         if (MyAccountService.hasAnyOrder()) {
             MyAccountService.viewOrderDetails();
-            assertTrue(MyAccountService.isOrderDetailsVisible(),
-                    "Order details were not displayed.");
+
+            boolean visible = false;
+            for(int i = 0; i < 5; i++) { // retry 5 veces
+                if (MyAccountService.isOrderDetailsVisible()) {
+                    visible = true;
+                    break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            assertTrue(visible, "The order details were not displayed.");
         } else {
             Assert.fail("No orders were found in the account.");
         }
     }
 
-
-    @When("the user clicks on the \"Edit\" button for the \"Shipping Address\"")
-    public void theUserEditsShippingAddress(){
-        MyAccountService.clickEditShippingAddress();
-    }
 
     @Then("the cart should already have products")
     public void theCartShouldHaveProducts(){
@@ -127,7 +128,4 @@ public class MyAccountSteps {
     public void accountDetailsShouldBeUpdated() {
         assertTrue(MyAccountService.isChangeSuccessMessageVisible(), "Los datos NO se actualizaron.");
     }
-
-
-
 }

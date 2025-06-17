@@ -8,13 +8,15 @@ public class MyAccountConstants {
     public static final String ORDERS_SECTION = "xpath://*[@id='page-36']//table";
     public static final String NO_ORDERS_MESSAGE = "xpath://*[@id='page-36']//p[contains(text(), 'No order has been made yet')]";
     public static final String SHIPPING_ADDRESS_EDIT = "xpath://*[@id='page-36']/div/div[1]/div/div/div[2]/header/a";
-    public static final String SHIPPING_ADDRESS_FORM = "xpath://form[@id='edit-shipping-form']";
-    public static final String ORDER_VIEW_BUTTON = "xpath://table[@class='woocommerce-orders-table']//tr[1]//a[contains(text(), 'View')]";
-    public static final String ORDER_DETAIL = "xpath://div[contains(@class,'order-details')]";
+    public static final String SHIPPING_ADDRESS_FORM = "xpath://*[@id='page-36']/div/div[1]/div/form/h3";
+
+    public static final String ORDER_VIEW_BUTTON = "xpath://*[@id='page-36']//table//tr[1]//a[contains(text(), 'View')]";
+
+    public static final String ORDER_DETAIL = "xpath://*[@id='page-36']/div/div[1]/div/h2";
+
     public static final String LOGOUT_BUTTON = "xpath://a[text()='Logout']";
     public static final String FIRST_ORDER_IN_TABLE = "xpath://table[contains(@class,'orders')]//tr[1]";
     public static final String CART_ITEMS = "xpath://div[contains(@class,'cart-item')]";
-
 
 
     // Agregar también:
