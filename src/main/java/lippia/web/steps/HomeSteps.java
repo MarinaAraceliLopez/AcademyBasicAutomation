@@ -200,15 +200,15 @@ public class HomeSteps  {
         if (!isVisible) {
             fail("Add to basket button not visible!");
         }
-
-        @When("the user clicks on the image of any Arrival")
-        public void clickAnyProductImage(){
-            HomeService.clickProduct(3);
-        }
-        @Then("the book detail page is displayed with Add to Basket button")
-        public void bookPageShouldShowAddToBasketButton() {
-            assertTrue("Add to basket button not visible!", HomeService.isAddToBasketVisible());
-        }
+//
+//        @When("the user clicks on the image of any Arrival")
+//        public void clickAnyProductImage(){
+//            HomeService.clickProduct(3);
+//        }
+//        @Then("the book detail page is displayed with Add to Basket button")
+//        public void bookPageShouldShowAddToBasketButton() {
+//            assertTrue("Add to basket button not visible!", HomeService.isAddToBasketVisible());
+//        }
 
 
     }
