@@ -12,7 +12,6 @@ Feature: My Account
     And the user should see "Hello"
 
 
-
   Scenario Outline: Verify account functionalities after login for "<action>"
     When the user clicks on the "<action>" button
     Then the user should see the "<action>" section visible
@@ -35,8 +34,6 @@ Feature: My Account
     When the user clicks on the "Orders" button
     And the user clicks on the "View" button of an order
     Then the user should see the order detail
-
-
 
   @TpFinal
   Scenario: Logout Flow
