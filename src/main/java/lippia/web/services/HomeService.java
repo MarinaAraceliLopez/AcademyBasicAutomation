@@ -1,17 +1,28 @@
 package lippia.web.services;
 
 import com.crowdar.core.actions.WebActionManager;
+import com.crowdar.driver.DriverManager;
 import lippia.web.constants.HomeConstants;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
+import java.util.List;
+
+import static lippia.web.constants.HomeConstants.ADD_TO_BASKET_BUTTON;
 
 public class HomeService {
 
+    public static void openUrl(String url) {
+        WebActionManager.navigateTo(url);
+    }
     public static void clickShopMenu() {
         WebActionManager.click(HomeConstants.SHOP_MENU);
     }
 
     public static void clickHomeMenu() {
-        WebActionManager.click(HomeConstants.HOME_MENU);
+        WebActionManager.click(HomeConstants.HOME_MENU_BUTTON);
     }
 
     public static int countArrivals() {
@@ -23,12 +34,25 @@ public class HomeService {
     }
 
     public static boolean isAddToBasketButtonVisible() {
-        return WebActionManager.isVisible(HomeConstants.ADD_TO_BASKET_BUTTON);
+        return WebActionManager.isVisible(ADD_TO_BASKET_BUTTON);
     }
 
     public static void clickAddToBasket() {
-        WebActionManager.click(HomeConstants.ADD_TO_BASKET_BUTTON);
+        WebActionManager.click(ADD_TO_BASKET_BUTTON);
     }
+
+    public static void clickProduct(int number) {
+        String product = null;
+        if (number == 1) product = HomeConstants.PRODUCT_1;
+        else if (number == 2) product = HomeConstants.PRODUCT_2;
+        else if (number == 3) product = HomeConstants.PRODUCT_3;
+
+        if (product != null) {
+            WebActionManager.click(product);
+        }
+    }
+
+
 
     public static boolean isBookInBasketWithPrice() {
         return WebActionManager.isVisible(HomeConstants.BASKET_MENU_ITEM) &&
@@ -99,4 +123,71 @@ public class HomeService {
     public static boolean isOrderConfirmationPageVisible() {
         return WebActionManager.isVisible(HomeConstants.ORDER_CONFIRMATION_DETAILS);
     }
+
+    public static boolean isBillingDetailsVisible() {
+        return WebActionManager.isVisible(HomeConstants.BILLING_DETAILS_FORM);
+    }
+
+    public static boolean isOrderDetailsVisible() {
+        return WebActionManager.isVisible(HomeConstants.ORDER_DETAILS);
+    }
+
+    public static boolean isAdditionalDetailsVisible() {
+        return WebActionManager.isVisible(HomeConstants.ADDITIONAL_DETAILS);
+    }
+
+    public static boolean isPaymentGatewayVisible() {
+        return WebActionManager.isVisible(HomeConstants.PAYMENT_GATEWAY);
+    }
+
+    public static boolean isOrderDetailsVisibleOnConfirmation() {
+        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_ORDER);
+    }
+
+    public static boolean isBankDetailsVisible() {
+        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_BANK);
+    }
+
+    public static boolean isCustomerDetailsVisible() {
+        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_CUSTOMER);
+    }
+
+    public static boolean isBillingDetailsVisibleConfirmation() {
+        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_BILLING);
+    }
+
+    private static WebDriver driver = DriverManager.getDriverInstance();
+
+    // Localizador de Arrivals en Home page
+    private static final By ARRIVALS = By.cssSelector(".products .product");
+
+    // Localizador de Sliders en Home page
+    private static final By SLIDERS = By.cssSelector("#nivoslider .nivo-slide");
+
+    public static int getArrivalCount() {
+        List<WebElement> arrivals = driver.findElements(ARRIVALS);
+        return arrivals.size();
+    }
+
+    public static int getSlidersCount() {
+        List<WebElement> sliders = driver.findElements(SLIDERS);
+        return sliders.size();
+    }
+
+//    public static boolean isAddToBasketVisible(WebDriver driver) {
+//        By ADD_TO_BASKET_BUTTON = By.cssSelector("button.single_add_to_cart_button");
+//
+//        try {
+//            return driver.findElement(ADD_TO_BASKET_BUTTON).isDisplayed();
+//        } catch (NoSuchElementException e) {
+//            return false;
+//        }
+//    }
+
+
+
+
+
 }
+
+
