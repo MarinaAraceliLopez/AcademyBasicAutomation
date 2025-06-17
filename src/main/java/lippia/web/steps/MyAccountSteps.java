@@ -128,4 +128,5 @@ public class MyAccountSteps {
     public void accountDetailsShouldBeUpdated() {
         assertTrue(MyAccountService.isChangeSuccessMessageVisible(), "Los datos NO se actualizaron.");
     }
+
 }

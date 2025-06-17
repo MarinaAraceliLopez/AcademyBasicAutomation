@@ -141,7 +141,4 @@ public class MyAccountService {
         return isElementPresent(byFromString(MyAccountConstants.FIRST_ORDER_IN_TABLE));
     }
 
-
-
-
 }

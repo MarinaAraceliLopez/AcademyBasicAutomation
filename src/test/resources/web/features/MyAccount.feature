@@ -1,4 +1,4 @@
-@Regression
+@MyAccount @Regression
 
 Feature: My Account
 
@@ -29,7 +29,7 @@ Feature: My Account
     And the user clicks on the "Edit" button for the "Shipping Address"
     Then the shipping address form should be visible
 
-  @MyAccount
+
   Scenario: View Order Details
     Given the user has at least one order in their account
     When the user clicks on the "Orders" button
