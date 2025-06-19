@@ -164,21 +164,17 @@ public class ShopService {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_city"))).sendKeys("Ciudad");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_postcode"))).sendKeys("12345");
 
-        // 🟢 Selección de país usando Select2 u otro dropdown personalizado
-        WebElement dropdownActivator = wait.until(ExpectedConditions.elementToBeClickable(By.id("select2-chosen-1")));
-        dropdownActivator.click();
+        // 🟢 Usar Select para seleccionar país
+        Select countryDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.id("billing_country"))));
+        countryDropdown.selectByVisibleText(country);
 
-        // Campo de búsqueda dentro del dropdown
-        WebElement searchInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@class, 'select2-input')]")));
-        searchInput.sendKeys(country);
+        // 🟢 Usar Select para seleccionar estado/provincia
+        Select stateDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.id("billing_state"))));
+        stateDropdown.selectByIndex(1); // O selectByVisibleText("Telangana") si lo pasás como parámetro
 
-        // Espera y clic en la opción correcta
-        WebElement countryOption = wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//div[contains(@class, 'select2-result-label') and text()='" + country + "']")));
-        countryOption.click();
-
-        System.out.println("✅ País seleccionado: " + country);
+        System.out.println("✅ Formulario completado correctamente.");
     }
+
 
 
 

@@ -40,12 +40,14 @@ Feature: Shop
     And the user proceeds to checkout
     Then the subtotal and total values are displayed
     And the total should be greater than the subtotal
+    And the user fills the billing form with country "<country>"
     And the tax rate should be <taxRate>% for "<country>"
 
     Examples:
-      | country      | taxRate |
-      | India        | 2       |
-      | Argentina    | 5       |
+      | country   | taxRate |
+      | India     | 2       |
+      | Argentina | 5       |
+
 
 
 

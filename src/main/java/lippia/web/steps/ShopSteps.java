@@ -144,6 +144,10 @@ public void theUserAddsABookToTheBasket() {
     public void totalGreaterThanSubtotal() {
         ShopService.validateSubtotalTotalAndTax();
     }
+    @And("the user fills the billing form with country {string}")
+    public void theUserFillsTheBillingFormWithCountry(String country) {
+        ShopService.fillBillingDetailsForm(country);
+    }
 
     @And("the tax rate should be {int}% for {string}")
     public void validateTaxRate(int expectedRate, String country) {

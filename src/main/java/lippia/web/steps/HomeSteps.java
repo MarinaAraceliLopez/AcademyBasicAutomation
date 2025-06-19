@@ -1,7 +1,13 @@
 package lippia.web.steps;
+import com.crowdar.driver.DriverManager;
 import io.cucumber.java.en.*;
 import lippia.web.services.HomeService;
 import lippia.web.services.ShopService;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class HomeSteps  {
@@ -57,6 +63,27 @@ public class HomeSteps  {
     @And("the user proceeds to checkout home")
     public void theUserProceedsToCheckoutHome() {
         HomeService.checkBasketHome();
+    }
+    @And("the user autocompletes the billing form with country {string} and state {string}")
+    public void userFillsBillingForm(String country, String state) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_first_name"))).sendKeys("Juan");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_last_name"))).sendKeys("Pérez");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_email"))).sendKeys("juan.perez@example.com");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_phone"))).sendKeys("1234567890");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_address_1"))).sendKeys("Calle Falsa 123");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_city"))).sendKeys("Ciudad");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_postcode"))).sendKeys("12345");
+
+        Select countryDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.id("billing_country"))));
+        countryDropdown.selectByVisibleText(country);
+
+        Select stateDropdown = new Select(wait.until(ExpectedConditions.elementToBeClickable(By.id("billing_state"))));
+        stateDropdown.selectByVisibleText(state);
+
+        System.out.println("✅ Formulario completado correctamente con país " + country + " y estado " + state);
     }
 
 
