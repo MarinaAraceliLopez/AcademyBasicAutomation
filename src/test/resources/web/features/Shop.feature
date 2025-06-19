@@ -33,22 +33,22 @@ Feature: Shop
     When the user clicks on the "second" "Sale" product on the home page
     Then the user can clearly view the actual price with the old price struck through
 
-  @TpFinal
-  Scenario Outline: Validate tax rate based on location
+  @TpFinal1
+  Scenario Outline: Validate Tax and Price Details
     When the user adds a book to the basket
-    And the user clicks view basket
-    And the user proceeds to checkout
-    And the tax rate should be <expectedTaxRate> percent for location "<location>"
+    Then the user views the book in the basket with price and navigates to the checkout page
+    And the subtotal and total values are displayed
+    And the total should be greater than the subtotal
+    And the tax rate should be <taxRate>% for "<country>"
 
     Examples:
-      | expectedTaxRate | location |
-      | 900             | India    |
-      | 900             | Argentina|
+      | country      | taxRate |
+      | India        | 2       |
+      | International| 5       |
 
 
 
-
-   @TpFinal
+  @TpFinal12
   Scenario Outline: Add book to basket and proceed to checkout
     When the user adds a book to the basket
     And the user clicks view basket
@@ -69,7 +69,7 @@ Feature: Shop
       | Direct bank transfer     |
       | Check Payments           |
       | Cash on Delivery         |
-      | PayPal |
+      | PayPal                   |
 
 
 
