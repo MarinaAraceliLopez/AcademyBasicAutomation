@@ -44,21 +44,12 @@ public class RegistrationService {
         }
     }
 
-
-    public static boolean isOnRegistrationPage() {
-        return WebActionManager.isPresent(RegistrationConstants.REGISTRATION_FORM);
-    }
-
     public static String getErrorMessage() {
         WebDriverWait wait = new WebDriverWait(DriverManager.getDriverInstance(), 10);
         WebElement message = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(byFromString(RegistrationConstants.ERROR_MESSAGE)));
         return message.getText();
     }
-
-//    public static boolean isRegistrationFailed() {
-//        return WebActionManager.isPresent(RegistrationConstants.ERROR_MESSAGE);
-//    }
 
     private static By byFromString(String locator) {
         if (locator.startsWith("xpath:")) {
@@ -73,8 +64,5 @@ public class RegistrationService {
             return By.xpath(locator);
         }
     }
-
-
-
 
 }

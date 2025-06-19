@@ -6,14 +6,14 @@
     And the user navigates to the URL "http://practice.automationtesting.in/"
     And the user clicks on the "My Account" menu
 
-    @Skip @Ignore
+    @UserRegister @Skip
     Scenario: User registration successful
       When the user enters "testeando12345678@gmail.com" in the "registration email" field
       And the user enters "testeando12345678" in the "registration password" field
       And the user clicks on the "register" button
       Then the user should see a registration confirmation or welcome message
 
-    @TpFinal
+  @Validation @TpFinal
   Scenario Outline: Invalid registration with incorrect combinations
     When the user enters "<email>" in the "registration email" field
     And the user enters "<password>" in the "registration password" field
