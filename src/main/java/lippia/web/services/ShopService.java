@@ -164,20 +164,22 @@ public class ShopService {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_city"))).sendKeys("Ciudad");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_postcode"))).sendKeys("12345");
 
-        WebElement countryDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_country")));
-        Select countrySelect = new Select(countryDropdown);
+        // 🟢 Selección de país usando Select2 u otro dropdown personalizado
+        WebElement dropdownActivator = wait.until(ExpectedConditions.elementToBeClickable(By.id("select2-chosen-1")));
+        dropdownActivator.click();
 
-        boolean countryFound = countrySelect.getOptions()
-                .stream()
-                .anyMatch(option -> option.getText().trim().equalsIgnoreCase(country));
+        // Campo de búsqueda dentro del dropdown
+        WebElement searchInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[contains(@class, 'select2-input')]")));
+        searchInput.sendKeys(country);
 
-        if (!countryFound) {
-            throw new AssertionError("❌ El país '" + country + "' no está disponible en el formulario.");
-        }
+        // Espera y clic en la opción correcta
+        WebElement countryOption = wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//div[contains(@class, 'select2-result-label') and text()='" + country + "']")));
+        countryOption.click();
 
-        countrySelect.selectByVisibleText(country);
         System.out.println("✅ País seleccionado: " + country);
     }
+
 
 
     public static void selectPaymentMethod(String method) {
