@@ -1,11 +1,17 @@
 package lippia.web.steps;
 import com.crowdar.core.PageSteps;
+import com.crowdar.driver.DriverManager;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import lippia.web.services.ShopService;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static lippia.web.services.ShopService.*;
+
 
 //1 Scenario: Filter products by price range between 150 and 450 rupees
 
@@ -126,5 +132,31 @@ public void theUserAddsABookToTheBasket() {
     public void theUserCanSeeOrderAndBillingDetails() {
         System.out.println("📦 Detalles de la orden y facturación visibles.");
     }
+
+//    @Then("the user views the book in the basket with price and navigates to the checkout page")
+//    public void viewBookAndNavigateToCheckout() {
+//        System.out.println("📘 Libro visible con precio.");
+//        ShopService.viewBasket();
+//        ShopService.proceedToCheckout();
+//    }
+    @Then("the subtotal and total values are displayed")
+    public void subtotalAndTotalDisplayed() {
+        ShopService.validateSubtotalAndTotalDisplayed();
+    }
+
+    @And("the total should be greater than the subtotal")
+    public void totalGreaterThanSubtotal() {
+        ShopService.validateSubtotalTotalAndTax();
+    }
+
+    @And("the tax rate should be {int}% for {string}")
+    public void validateTaxRate(int expectedRate, String country) {
+        ShopService.validateTaxRate(expectedRate, country);
+    }
+
+
+
+
+
 
 }

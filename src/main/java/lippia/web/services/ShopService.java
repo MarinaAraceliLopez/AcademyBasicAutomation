@@ -110,6 +110,7 @@ public class ShopService {
         private static final By TAX_LOCATOR = By.xpath("//*[@id='order_review']/table/tfoot/tr[2]/td");
         private static final By TOTAL_LOCATOR = By.xpath("//*[@id='order_review']/table/tfoot/tr[3]/td");
 
+
     public static void performAction(By locator) {
         WebDriver driver = DriverManager.getDriverInstance();
         WebDriverWait wait = new WebDriverWait(driver, 20);
@@ -133,7 +134,6 @@ public class ShopService {
             throw new AssertionError("❌ No se pudo interactuar con el elemento: " + locator, e);
         }
     }
-
 
 
     public static void addBookToBasket() {
@@ -166,10 +166,19 @@ public class ShopService {
 
         WebElement countryDropdown = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("billing_country")));
         Select countrySelect = new Select(countryDropdown);
-        countrySelect.selectByVisibleText(country);
 
+        boolean countryFound = countrySelect.getOptions()
+                .stream()
+                .anyMatch(option -> option.getText().trim().equalsIgnoreCase(country));
+
+        if (!countryFound) {
+            throw new AssertionError("❌ El país '" + country + "' no está disponible en el formulario.");
+        }
+
+        countrySelect.selectByVisibleText(country);
         System.out.println("✅ País seleccionado: " + country);
     }
+
 
     public static void selectPaymentMethod(String method) {
             WebDriver driver = DriverManager.getDriverInstance();
@@ -225,4 +234,73 @@ public class ShopService {
             throw new IllegalArgumentException("No se pudo parsear el número: " + text, e);
         }
     }
+
+    public static void agregarProducto() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        CommonService.hideAds(driver); // 👈 oculta la publicidad
+
+        By botonAgregar = By.xpath("//*[@id='content']/ul/li[1]/a[2]");
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+        WebElement boton = wait.until(ExpectedConditions.elementToBeClickable(botonAgregar));
+
+        // Scroll al botón por si está oculto
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block: 'center'});", boton);
+
+        boton.click();
+    }
+
+    public static void validateSubtotalAndTotalDisplayed() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        String subtotalText = wait.until(ExpectedConditions.visibilityOfElementLocated(SUBTOTAL_LOCATOR)).getText();
+        String totalText = wait.until(ExpectedConditions.visibilityOfElementLocated(TOTAL_LOCATOR)).getText();
+
+        double subtotal = parseAmount(subtotalText);
+        double total = parseAmount(totalText);
+
+        if (subtotal <= 0) {
+            throw new AssertionError("❌ Subtotal inválido o no visible: " + subtotalText);
+        }
+
+        if (total <= 0) {
+            throw new AssertionError("❌ Total inválido o no visible: " + totalText);
+        }
+
+        System.out.println("✅ Subtotal y total visibles. Subtotal: " + subtotal + " | Total: " + total);
+    }
+
+    public static void validateTaxRate(int expectedRate, String country) {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        double subtotal = parseAmount(wait.until(ExpectedConditions.visibilityOfElementLocated(SUBTOTAL_LOCATOR)).getText());
+        double tax = parseAmount(wait.until(ExpectedConditions.visibilityOfElementLocated(TAX_LOCATOR)).getText());
+        double total = parseAmount(wait.until(ExpectedConditions.visibilityOfElementLocated(TOTAL_LOCATOR)).getText());
+
+        // Validación: el total debe ser mayor al subtotal
+        if (total <= subtotal) {
+            throw new AssertionError("❌ El total debe ser mayor que el subtotal. Subtotal: " + subtotal + ", Total: " + total);
+        }
+
+        // Cálculo de tasa efectiva
+        double calculatedRate = (tax / subtotal) * 100;
+        double roundedRate = Math.round(calculatedRate);
+
+        // Debug
+        System.out.println("🧮 País: " + country + " | Subtotal: " + subtotal + " | Impuesto: " + tax +
+                " | Total: " + total + " | Tasa calculada: " + String.format("%.2f", calculatedRate) + "%");
+
+        // Validación de la tasa esperada
+        if (roundedRate != expectedRate) {
+            throw new AssertionError("❌ Tasa impositiva incorrecta para " + country +
+                    ". Esperada: " + expectedRate + "%, pero fue: " + String.format("%.2f", calculatedRate) + "%");
+        }
+
+        System.out.println("✅ Tasa impositiva correcta para " + country + ": " + expectedRate + "%");
+    }
+
+
+
+
 }

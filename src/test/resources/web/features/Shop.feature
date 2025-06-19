@@ -36,15 +36,16 @@ Feature: Shop
   @TpFinal1
   Scenario Outline: Validate Tax and Price Details
     When the user adds a book to the basket
-    Then the user views the book in the basket with price and navigates to the checkout page
-    And the subtotal and total values are displayed
+    And the user clicks view basket
+    And the user proceeds to checkout
+    Then the subtotal and total values are displayed
     And the total should be greater than the subtotal
     And the tax rate should be <taxRate>% for "<country>"
 
     Examples:
       | country      | taxRate |
       | India        | 2       |
-      | International| 5       |
+      | Argentina    | 5       |
 
 
 
