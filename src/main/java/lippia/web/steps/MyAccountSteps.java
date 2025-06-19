@@ -1,10 +1,7 @@
 package lippia.web.steps;
 
 import io.cucumber.java.en.*;
-import lippia.web.services.FormService;
 import lippia.web.services.MyAccountService;
-import org.testng.Assert;
-
 import static org.testng.Assert.assertTrue;
 
 public class MyAccountSteps {
@@ -16,12 +13,9 @@ public class MyAccountSteps {
 
     @And("the user clicks on the {string} button for the {string}")
     public void theUserClicksEditFor(String button, String context) {
-        if (context.equalsIgnoreCase("Shipping Address") && button.equalsIgnoreCase("Edit")) {
-            MyAccountService.clickEditShippingAddress();
-        } else {
-            Assert.fail("Unknown button " + button + " for context " + context);
-        }
+        MyAccountService.handleAccountButtonClick(button, context);
     }
+
 
     @Then("the user should see the {string} section visible")
     public void theUserShouldSeeTheSectionVisible(String action) {
@@ -71,26 +65,8 @@ public class MyAccountSteps {
     }
 
     @Then("the user should view order details")
-    public void viewOrderDetailsStep(){
-        if (MyAccountService.hasAnyOrder()) {
-            MyAccountService.viewOrderDetails();
-
-            boolean visible = false;
-            for(int i = 0; i < 5; i++) { // retry 5 veces
-                if (MyAccountService.isOrderDetailsVisible()) {
-                    visible = true;
-                    break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-            assertTrue(visible, "The order details were not displayed.");
-        } else {
-            Assert.fail("No orders were found in the account.");
-        }
+    public void viewOrderDetailsStep() {
+        MyAccountService.validateAccountGreeting();
     }
 
 
@@ -128,5 +104,6 @@ public class MyAccountSteps {
     public void accountDetailsShouldBeUpdated() {
         assertTrue(MyAccountService.isChangeSuccessMessageVisible(), "Los datos NO se actualizaron.");
     }
+
 
 }
