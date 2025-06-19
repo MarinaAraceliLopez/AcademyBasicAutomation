@@ -1,18 +1,19 @@
 @Registration @Regression
-Feature: User registration on the website
+  Feature: User registration on the website
 
   Background:
     Given the user opens the browser
     And the user navigates to the URL "http://practice.automationtesting.in/"
     And the user clicks on the "My Account" menu
 
-  @Smoke
-  Scenario: User registration successful
-    When the user enters "marinaracelilopez@gmail.com" in the "registration email" field
-    And the user enters "Marina_12_26" in the "registration password" field
-    And the user clicks on the "register" button
-    Then the user should see a registration confirmation or welcome message
+    @UserRegister @Skip
+    Scenario: User registration successful
+      When the user enters "testeando12345678@gmail.com" in the "registration email" field
+      And the user enters "testeando12345678" in the "registration password" field
+      And the user clicks on the "register" button
+      Then the user should see a registration confirmation or welcome message
 
+  @Validation @TpFinal
   Scenario Outline: Invalid registration with incorrect combinations
     When the user enters "<email>" in the "registration email" field
     And the user enters "<password>" in the "registration password" field
@@ -21,8 +22,13 @@ Feature: User registration on the website
     And a message saying "<message>" should be displayed
 
     Examples:
-      | email                      | password      | message                                                                 |
-      | assdg-@gmail               | Marina_12_26  | Please provide a valid email address.                                   |
-      |                            | Marina_12_26  | Please provide a valid email address.                                   |
-      |                            |               | Please provide a valid email address.                                   |
-      | marinaracelilopez@gmail.com|               | An account is already registered with your email address. Please login. |
+      | email                      | password      | message                                                                        |
+      | assdg-@gmai                | testeando1234 | Error: Please provide a valid email address.                                   |
+      |                            | testeando1234 | Please provide a valid email address.                                          |
+      |                            |               | Please provide a valid email address.                                          |
+      | testeando1234@gmail.com    |               | Error: An account is already registered with your email address. Please login. |
+
+
+
+
+

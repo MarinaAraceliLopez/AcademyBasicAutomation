@@ -10,4 +10,5 @@ public class RegistrationSteps {
     public void theUserShouldSeeAConfirmationMessage() {
         Assert.assertTrue(RegistrationService.isRegistrationSuccessful(), "No se mostró el mensaje de bienvenida.");
     }
+
 }

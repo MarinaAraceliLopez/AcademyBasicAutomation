@@ -4,10 +4,12 @@ import com.crowdar.core.actions.WebActionManager;
 import com.crowdar.driver.DriverManager;
 import lippia.web.constants.RegistrationConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class RegistrationService {
-
 
     public static void fillRegistrationField(String field, String value) {
         switch (field) {
@@ -22,7 +24,6 @@ public class RegistrationService {
         }
     }
 
-
     public static void clickButton(String button) {
         switch (button) {
             case "register":
@@ -33,24 +34,35 @@ public class RegistrationService {
         }
     }
 
-
     public static boolean isRegistrationSuccessful() {
-        return WebActionManager.isPresent(RegistrationConstants.SUCCESS_CONTENT);
+        WebDriverWait wait = new WebDriverWait(DriverManager.getDriverInstance(), 10);
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(byFromString(RegistrationConstants.SUCCESS_CONTENT)));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
-
-
-    public static boolean isOnRegistrationPage() {
-        return WebActionManager.isPresent(RegistrationConstants.REGISTRATION_FORM);
-    }
-
 
     public static String getErrorMessage() {
-        WebElement messageElement = DriverManager.getDriverInstance().findElement(By.cssSelector(RegistrationConstants.ERROR_MESSAGE));
-        return messageElement.getText();
+        WebDriverWait wait = new WebDriverWait(DriverManager.getDriverInstance(), 10);
+        WebElement message = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(byFromString(RegistrationConstants.ERROR_MESSAGE)));
+        return message.getText();
     }
 
-
-    public static boolean isRegistrationFailed() {
-        return WebActionManager.isPresent(RegistrationConstants.ERROR_MESSAGE);
+    private static By byFromString(String locator) {
+        if (locator.startsWith("xpath:")) {
+            return By.xpath(locator.replace("xpath:", ""));
+        } else if (locator.startsWith("css:")) {
+            return By.cssSelector(locator.replace("css:", ""));
+        } else if (locator.startsWith("id:")) {
+            return By.id(locator.replace("id:", ""));
+        } else if (locator.startsWith("name:")) {
+            return By.name(locator.replace("name:", ""));
+        } else {
+            return By.xpath(locator);
+        }
     }
+
 }
