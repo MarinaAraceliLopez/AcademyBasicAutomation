@@ -80,6 +80,17 @@ public class HomeSteps  {
         ShopService.validateOrderConfirmationDetails();
     }
 
+    @Then("the total should be less than the subtotal")
+    public void theTotalIsLessThanSubtotalHome() {
+        ShopService.validateSubtotalTotalAndTax(); // o similar
+    }
+
+    @And("the payment page should show Billing Details, Order Details, Additional Details, and Payment gateway options")
+    public void paymentPageShowsAllBlocks() {
+        ShopService.validatePaymentPageSectionsPresent();
+    }
+
+
 
 
 

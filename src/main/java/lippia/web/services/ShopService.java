@@ -302,6 +302,67 @@ public class ShopService {
         System.out.println("✅ Tasa impositiva correcta para " + country + ": " + expectedRate + "%");
     }
 
+    public static void validateOrderCompletion() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+
+        try {
+            // Ejemplo: Esperar a que aparezca algún elemento que indique que la orden fue completada
+            By orderCompleteMessage = By.xpath("//p[contains(text(), 'Thank you. Your order has been received')]");
+            wait.until(ExpectedConditions.visibilityOfElementLocated(orderCompleteMessage));
+            System.out.println("✅ Orden completada correctamente.");
+        } catch (TimeoutException e) {
+            throw new AssertionError("❌ No se confirmó la finalización de la orden.");
+        }
+    }
+
+    public static void validateOrderConfirmationDetails() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 15);
+
+        try {
+            // Validar que detalles importantes estén visibles (ejemplo)
+            By orderDetails = By.id("order_details");
+            By bankDetails = By.id("bank_details");
+            By customerDetails = By.id("customer_details");
+            By billingDetails = By.id("billing_details");
+
+            wait.until(ExpectedConditions.visibilityOfElementLocated(orderDetails));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(bankDetails));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(customerDetails));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(billingDetails));
+
+            System.out.println("✅ Detalles de orden, banco, cliente y facturación visibles.");
+        } catch (TimeoutException e) {
+            throw new AssertionError("❌ Faltan detalles en la página de confirmación de la orden.");
+        }
+    }
+
+    //home page
+
+    public static void validatePaymentPageSectionsPresent() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        // Esperamos y validamos los títulos de las secciones
+        try {
+            WebElement billingDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'Billing Details')]")));
+            WebElement orderDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'Your order')]")));
+            WebElement additionalDetails = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'Additional Information')]")));
+            WebElement paymentMethod = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(text(), 'Payment')]")));
+
+            if (!billingDetails.isDisplayed() || !orderDetails.isDisplayed() || !additionalDetails.isDisplayed() || !paymentMethod.isDisplayed()) {
+                throw new AssertionError("❌ Alguna sección obligatoria no está visible.");
+            }
+
+            System.out.println("✅ Todas las secciones de la página de pago están visibles.");
+        } catch (TimeoutException e) {
+            throw new AssertionError("❌ No se encontraron todas las secciones de la página de pago.", e);
+        }
+    }
+
+
+
 
 
 
