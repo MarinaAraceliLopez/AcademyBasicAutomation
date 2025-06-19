@@ -6,6 +6,7 @@ Feature: Login
     And the user navigates to the URL "http://practice.automationtesting.in/"
     And the user clicks on the "My Account" menu
 
+  @InvalidCredentials
   Scenario Outline: Invalid login with incorrect combinations
     When the user enters "<email>" in the "login email" field
     And the user enters "<password>" in the "login password" field
@@ -14,13 +15,12 @@ Feature: Login
     And a message saying "<message>" should be displayed
 
     Examples:
-      | email                       | password      | message                                                                                                                        |
-      | assdg-@gmail                | 123mal-       | The username assdg-@gmail is not registered on this site. If you are unsure of your username, try your email address instead.  |
-      | testeando1234@gmail.com     |               | Password is required.                                                                                                          |
-      |                             | testeando1234 | Username is required.                                                                                                          |
+      | email                   | password      | message                                                                                                                        |
+      | assdg-@gmail            | 123mal-       | The username assdg-@gmail is not registered on this site. If you are unsure of your username, try your email address instead.  |
+      | testeando1234@gmail.com |               | Password is required.                                                                                                          |
+      |                         | testeando1234 | Username is required.                                                                                                          |
 
-
-   @TpFinal
+  @CaseSensitivity @TpFinal
   Scenario: Login fails with case changed username and password
     When the user enters "testeando@gmail.com" in the "login email" field
     And the user enters "testeando" in the "login password" field
@@ -28,8 +28,7 @@ Feature: Login
     Then the user should stay on the same page
     And a message saying "Error: A user could not be found with this email address." should be displayed
 
-
-  @TpFinal
+  @Security @BackNavigation @TpFinal
   Scenario: User cannot access account after logout using back button
     When the user enters "testeando1234@gmail.com" in the "login email" field
     And the user enters "testeando1234" in the "login password" field
@@ -39,7 +38,7 @@ Feature: Login
     Then the user should not be signed in
     And the user should see the login page
 
-
+  @UserLogin
   Scenario: Successful user login
     When the user enters "testeando1234@gmail.com" in the "login email" field
     And the user enters "testeando1234" in the "login password" field

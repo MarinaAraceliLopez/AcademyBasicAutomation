@@ -19,7 +19,7 @@ public class LoginService {
         } else if (locator.startsWith("name:")) {
             return By.name(locator.replace("name:", ""));
         } else {
-            // Si no tiene prefijo, asumimos que es un XPath
+
             return By.xpath(locator);
         }
     }
@@ -39,8 +39,6 @@ public class LoginService {
                 .findElement(byFromString(LoginConstants.LOGIN_BUTTON))
                 .click();
     }
-
-
 
     public static boolean isLoginFailed() {
         return isElementPresent(byFromString(LoginConstants.ERROR_MESSAGE));
