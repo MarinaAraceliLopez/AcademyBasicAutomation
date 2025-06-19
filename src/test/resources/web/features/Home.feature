@@ -6,22 +6,22 @@ Feature: Purchase a book from automationpractice.in
     Given the user opens the browser
     And the user navigates to the URL "http://practice.automationtesting.in/"
 
-  @TpFinald
+
+  @HomePageArrivals
   Scenario: Home page shows 3 Arrivals
     Then the Home page shows only 3 Arrivals
 
-  @TpFinald
+  @HomePageSliders
   Scenario: Home page has 3 Sliders
     Then the Home page has 3 Sliders only
     And the Home page must contain only 3 Sliders
 
-  @TpFinald
+  @BookDetailAddToBasket
   Scenario: Book detail page displays Add to Basket button
     When the user clicks on the image of any Arrival
     Then the book detail page is displayed with Add to Basket button
 
-
-  @TpFinal
+  @AddBookAndNavigatePayment
   Scenario: Add book to basket and navigate to payment page (without placing order)
     When the user clicks on the image of any Arrival
     And the book detail page is displayed with Add to Basket button
@@ -31,7 +31,7 @@ Feature: Purchase a book from automationpractice.in
     Then the total should be less than the subtotal
     And the payment page should show Billing Details, Order Details, Additional Details, and Payment gateway options
 
-
+  @CompleteOrderAndVerifyConfirmation
   Scenario: Complete the order process and verify order confirmation page
     When the user clicks on the image of any Arrival
     And the book detail page is displayed with Add to Basket button
@@ -43,3 +43,4 @@ Feature: Purchase a book from automationpractice.in
     And the user clicks on "Place Order" button home
     Then the order is completed
     And the order confirmation page shows order, bank, customer, and billing details
+
