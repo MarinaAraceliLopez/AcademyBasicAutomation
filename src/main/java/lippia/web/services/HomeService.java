@@ -1,193 +1,85 @@
 package lippia.web.services;
-
-import com.crowdar.core.actions.WebActionManager;
 import com.crowdar.driver.DriverManager;
-import lippia.web.constants.HomeConstants;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-import static lippia.web.constants.HomeConstants.ADD_TO_BASKET_BUTTON;
+import static lippia.web.services.ShopService.performAction;
+
 
 public class HomeService {
-
-    public static void openUrl(String url) {
-        WebActionManager.navigateTo(url);
-    }
-    public static void clickShopMenu() {
-        WebActionManager.click(HomeConstants.SHOP_MENU);
-    }
-
-    public static void clickHomeMenu() {
-        WebActionManager.click(HomeConstants.HOME_MENU_BUTTON);
-    }
-
-    public static int countArrivals() {
-        return WebActionManager.getElements(HomeConstants.ARRIVALS_SECTION).size();
-    }
-
-    public static void clickArrivalImage(int index) {
-        WebActionManager.click("(" + HomeConstants.ARRIVAL_IMAGES + ")[" + index + "]");
-    }
-
-    public static boolean isAddToBasketButtonVisible() {
-        return WebActionManager.isVisible(ADD_TO_BASKET_BUTTON);
-    }
-
-    public static void clickAddToBasket() {
-        WebActionManager.click(ADD_TO_BASKET_BUTTON);
-    }
-
-    public static void clickProduct(int number) {
-        String product = null;
-        if (number == 1) product = HomeConstants.PRODUCT_1;
-        else if (number == 2) product = HomeConstants.PRODUCT_2;
-        else if (number == 3) product = HomeConstants.PRODUCT_3;
-
-        if (product != null) {
-            WebActionManager.click(product);
-        }
-    }
-
-
-
-    public static boolean isBookInBasketWithPrice() {
-        return WebActionManager.isVisible(HomeConstants.BASKET_MENU_ITEM) &&
-                WebActionManager.isVisible(HomeConstants.BASKET_PRICE);
-    }
-
-    public static void clickBasketItemLink() {
-        WebActionManager.click(HomeConstants.BASKET_ITEM_LINK);
-    }
-
-    public static double getTotalValue() {
-        String totalText = WebActionManager.getText(HomeConstants.TOTAL_VALUE);
-        return parsePrice(totalText);
-    }
-
-    public static double getSubtotalValue() {
-        String subtotalText = WebActionManager.getText(HomeConstants.SUBTOTAL_VALUE);
-        return parsePrice(subtotalText);
-    }
-
-    private static double parsePrice(String priceText) {
-        return Double.parseDouble(priceText.replaceAll("[^\\d.]", ""));
-    }
-
-    public static void clickProceedToCheckout() {
-        WebActionManager.click(HomeConstants.PROCEED_TO_CHECKOUT_BUTTON);
-    }
-
-    public static boolean isPaymentPageVisible() {
-        return WebActionManager.isVisible(HomeConstants.BILLING_DETAILS_FORM);
-    }
-
-    public static void fillBillingDetails(String name, String email, String phone, String address) {
-        WebActionManager.setInput("id=billing_first_name", name);
-        WebActionManager.setInput("id=billing_email", email);
-        WebActionManager.setInput("id=billing_phone", phone);
-        WebActionManager.setInput("id=billing_address_1", address);
-    }
-
-    public static void selectPaymentMethod(String paymentMethod) {
-        String locator = "";
-        switch (paymentMethod.toLowerCase()) {
-            case "bank transfer":
-                locator = HomeConstants.PAYMENT_METHOD_BANK_TRANSFER;
-                break;
-            case "cheque":
-                locator = HomeConstants.PAYMENT_METHOD_CHEQUE;
-                break;
-            case "cash":
-                locator = HomeConstants.PAYMENT_METHOD_CASH;
-                break;
-            case "paypal":
-                locator = HomeConstants.PAYMENT_METHOD_PAYPAL;
-                break;
-        }
-        WebActionManager.click(locator);
-    }
-
-    public static void applyCoupon(String couponCode) {
-        WebActionManager.setInput(HomeConstants.COUPON_FIELD, couponCode);
-        WebActionManager.click(HomeConstants.APPLY_COUPON_BUTTON);
-    }
-
-    public static void clickPlaceOrder() {
-        WebActionManager.click(HomeConstants.PLACE_ORDER_BUTTON);
-    }
-
-    public static boolean isOrderConfirmationPageVisible() {
-        return WebActionManager.isVisible(HomeConstants.ORDER_CONFIRMATION_DETAILS);
-    }
-
-    public static boolean isBillingDetailsVisible() {
-        return WebActionManager.isVisible(HomeConstants.BILLING_DETAILS_FORM);
-    }
-
-    public static boolean isOrderDetailsVisible() {
-        return WebActionManager.isVisible(HomeConstants.ORDER_DETAILS);
-    }
-
-    public static boolean isAdditionalDetailsVisible() {
-        return WebActionManager.isVisible(HomeConstants.ADDITIONAL_DETAILS);
-    }
-
-    public static boolean isPaymentGatewayVisible() {
-        return WebActionManager.isVisible(HomeConstants.PAYMENT_GATEWAY);
-    }
-
-    public static boolean isOrderDetailsVisibleOnConfirmation() {
-        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_ORDER);
-    }
-
-    public static boolean isBankDetailsVisible() {
-        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_BANK);
-    }
-
-    public static boolean isCustomerDetailsVisible() {
-        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_CUSTOMER);
-    }
-
-    public static boolean isBillingDetailsVisibleConfirmation() {
-        return WebActionManager.isVisible(HomeConstants.CONFIRMATION_BILLING);
-    }
-
-    private static WebDriver driver = DriverManager.getDriverInstance();
-
-    // Localizador de Arrivals en Home page
+    private static final By ADD_TO_BASKET_HOME = By.xpath("//*[@id=\"product-160\"]/div[2]/form/button");
+    private static final By VIEW_BASKET_HOME = By.xpath("//a[contains(@class,'added_to_cart') or contains(text(),'View Basket')]");
+    private static final By CHECK_BASKET_HOME = By.xpath("//*[@id=\"page-34\"]/div/div[1]/div/div/div/a");
     private static final By ARRIVALS = By.cssSelector(".products .product");
+    private static final By SLIDERS = By.cssSelector("#n2-ss-6 .n2-ss-slide-background");
 
-    // Localizador de Sliders en Home page
-    private static final By SLIDERS = By.cssSelector("#nivoslider .nivo-slide");
+    // 1,2 Scenario: Home page shows 3 Arrivals
 
-    public static int getArrivalCount() {
+    public static void validateArrivalsCountIsThree() {
+        WebDriver driver = DriverManager.getDriverInstance();
         List<WebElement> arrivals = driver.findElements(ARRIVALS);
-        return arrivals.size();
+        if (arrivals.size() != 3) {
+            throw new AssertionError("❌ Se esperaban 3 'Arrivals' pero se encontraron: " + arrivals.size());
+        }
+        System.out.println("✅ Hay 3 arrivals visibles en la Home.");
     }
 
-    public static int getSlidersCount() {
+    public static void validateSlidersCountIsThree() {
+        WebDriver driver = DriverManager.getDriverInstance();
         List<WebElement> sliders = driver.findElements(SLIDERS);
-        return sliders.size();
+        if (sliders.size() != 3) {
+            throw new AssertionError("❌ Se esperaban 3 sliders pero se encontraron: " + sliders.size());
+        }
+        System.out.println("✅ Hay 3 sliders en la Home.");
     }
 
-//    public static boolean isAddToBasketVisible(WebDriver driver) {
-//        By ADD_TO_BASKET_BUTTON = By.cssSelector("button.single_add_to_cart_button");
-//
-//        try {
-//            return driver.findElement(ADD_TO_BASKET_BUTTON).isDisplayed();
-//        } catch (NoSuchElementException e) {
-//            return false;
-//        }
-//    }
+// 4,5 Scenario: Complete the order process and verify order confirmation page
+
+    public static void addProductFromHome() {
+        performAction(ADD_TO_BASKET_HOME);
+    }
+
+    public static void viewBasketFromHome() {
+        performAction(VIEW_BASKET_HOME);
+    }
+
+    public static void checkBasketHome() {
+        performAction(CHECK_BASKET_HOME);
+    }
 
 
+    private static final By ARRIVAL_IMAGE = By.xpath("//img[contains(@class,'attachment-shop_catalog')]");
+    private static final By ADD_TO_BASKET_BTN = By.cssSelector(".single_add_to_cart_button");
 
+    public static void clickAnyArrivalImage() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 15);
 
+        WebElement arrival = wait.until(ExpectedConditions.elementToBeClickable(ARRIVAL_IMAGE));
+        arrival.click();
+        System.out.println("🖼️ Imagen Arrival clickeada.");
+    }
 
+    public static void validateBookDetailPageHasAddToBasket() {
+        WebDriver driver = DriverManager.getDriverInstance();
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+
+        WebElement button = wait.until(ExpectedConditions.visibilityOfElementLocated(ADD_TO_BASKET_BTN));
+        if (!button.isDisplayed()) {
+            throw new AssertionError("❌ Botón 'Add to Basket' no visible.");
+        }
+
+        System.out.println("📘 Página del libro tiene botón 'Add to Basket'.");
+    }
 }
+
+
+
+
 
 
